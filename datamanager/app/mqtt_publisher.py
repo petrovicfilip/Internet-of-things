@@ -42,7 +42,7 @@ class MqttPublisher:
         msg = {
             "action": action,              # created|updated|deleted
             "emitted_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-            "reading": reading,            # tvoj reading payload
+            "reading": reading,        
         }
         try:
             self.client.publish(self.topic, json.dumps(msg), qos=self.qos, retain=False)
