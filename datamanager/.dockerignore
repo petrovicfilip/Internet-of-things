@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+data/
+*.csv
+*.zip
+
+.git/
+.vscode/
+.idea/
+.DS_Store

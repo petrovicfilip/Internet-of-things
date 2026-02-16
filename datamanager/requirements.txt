@@ -1,0 +1,9 @@
+grpcio>=1.60
+grpcio-tools>=1.60
+grpcio-reflection>=1.60
+protobuf>=4.25
+
+SQLAlchemy>=2.0
+asyncpg>=0.29
+
+paho-mqtt>=2.1.0

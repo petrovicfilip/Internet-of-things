@@ -1,0 +1,59 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: iot-postgres
+    environment:
+      POSTGRES_USER: filip
+      POSTGRES_PASSWORD: filip
+      POSTGRES_DB: iot1
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U filip -d iot1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  datamanager:
+    build: ./datamanager
+    container_name: iot-datamanager
+    environment:
+      DATABASE_URL: postgresql+asyncpg://filip:filip@postgres:5432/iot1
+      GRPC_PORT: "50051"
+    ports:
+      - "50051:50051"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  gateway:
+    build: ./gateway
+    container_name: iot-gateway
+    environment:
+      DATAMANAGER_GRPC_URL: datamanager:50051
+      PORT: "3000"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - datamanager
+
+  sensorgenerator:
+    build: ./sensorgenerator
+    container_name: iot-sensorgenerator
+    environment:
+      GATEWAY_URL: http://gateway:3000/api/v1/readings
+      DATA_FILE: /data/occupancy_readings.csv
+      MODE: fixed
+      INTERVAL_MS: "200"
+      LIMIT: "5000"
+      LOOP: "false"
+    depends_on:
+      - gateway
+    volumes:
+      - ./data/processed/occupancy_readings.csv:/data/occupancy_readings.csv:ro
+
+
+volumes:
+  pgdata:

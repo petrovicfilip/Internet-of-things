@@ -1,0 +1,205 @@
+openapi: 3.0.0
+paths:
+  /api/v1/readings:
+    post:
+      operationId: ReadingsController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReadingDto'
+      responses:
+        '201':
+          description: Created
+      summary: Create a sensor reading
+      tags: &ref_0
+        - readings
+    get:
+      operationId: ReadingsController_list
+      parameters:
+        - name: from
+          required: false
+          in: query
+          description: ISO8601 from timestamp
+          schema:
+            type: string
+        - name: to
+          required: false
+          in: query
+          description: ISO8601 to timestamp
+          schema:
+            type: string
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 1000
+            default: 50
+            type: number
+        - name: offset
+          required: false
+          in: query
+          schema:
+            default: 0
+            type: number
+        - name: order
+          required: false
+          in: query
+          schema:
+            default: asc
+            type: string
+            enum:
+              - asc
+              - desc
+      responses:
+        '200':
+          description: OK
+      summary: List readings (time filter + paging)
+      tags: *ref_0
+  /api/v1/readings/aggregate:
+    get:
+      operationId: ReadingsController_aggregate
+      parameters:
+        - name: from
+          required: true
+          in: query
+          description: ISO8601 from timestamp
+          schema:
+            type: string
+        - name: to
+          required: true
+          in: query
+          description: ISO8601 to timestamp
+          schema:
+            type: string
+        - name: fields
+          required: false
+          in: query
+          description: Comma separated list, e.g. temperature_c,co2_ppm
+          schema:
+            example: temperature_c,co2_ppm
+            type: string
+      responses:
+        '200':
+          description: OK
+      summary: Aggregate numeric fields over time range
+      tags: *ref_0
+  /api/v1/readings/{id}:
+    get:
+      operationId: ReadingsController_get
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            format: uuid
+            type: string
+      responses:
+        '200':
+          description: ''
+      summary: Get reading by id
+      tags: *ref_0
+    put:
+      operationId: ReadingsController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            format: uuid
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReadingDto'
+      responses:
+        '200':
+          description: ''
+      summary: Update reading
+      tags: *ref_0
+    delete:
+      operationId: ReadingsController_remove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            format: uuid
+            type: string
+      responses:
+        '204':
+          description: ''
+      summary: Delete reading
+      tags: *ref_0
+info:
+  title: IoT Gateway API
+  description: REST Gateway that forwards CRUD + aggregations to DataManager (gRPC)
+  version: 1.0.0
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    CreateReadingDto:
+      type: object
+      properties:
+        source_id:
+          type: number
+          description: Original dataset id (optional)
+        ts:
+          type: string
+          example: '2023-11-14T22:13:20.000Z'
+        temperature_c:
+          type: number
+        humidity_percent:
+          type: number
+        light_lux:
+          type: number
+        co2_ppm:
+          type: number
+        humidity_ratio:
+          type: number
+        occupancy:
+          type: boolean
+      required:
+        - ts
+        - temperature_c
+        - humidity_percent
+        - light_lux
+        - co2_ppm
+        - humidity_ratio
+        - occupancy
+    UpdateReadingDto:
+      type: object
+      properties:
+        source_id:
+          type: number
+          description: Original dataset id (optional)
+        ts:
+          type: string
+          example: '2023-11-14T22:13:20.000Z'
+        temperature_c:
+          type: number
+        humidity_percent:
+          type: number
+        light_lux:
+          type: number
+        co2_ppm:
+          type: number
+        humidity_ratio:
+          type: number
+        occupancy:
+          type: boolean
+      required:
+        - ts
+        - temperature_c
+        - humidity_percent
+        - light_lux
+        - co2_ppm
+        - humidity_ratio
+        - occupancy

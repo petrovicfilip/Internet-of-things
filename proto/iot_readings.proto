@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package iot;
+
+import "google/protobuf/timestamp.proto";
+
+service ReadingService {
+  rpc CreateReading(CreateReadingRequest) returns (ReadingResponse);
+  rpc GetReading(GetReadingRequest) returns (ReadingResponse);
+  rpc UpdateReading(UpdateReadingRequest) returns (ReadingResponse);
+  rpc DeleteReading(DeleteReadingRequest) returns (DeleteReadingResponse);
+  rpc ListReadings(ListReadingsRequest) returns (ListReadingsResponse);
+
+  // Bonus (preporučeno): agregacije server-side (brže i “ozbiljnije”)
+  rpc Aggregate(AggregateRequest) returns (AggregateResponse);
+}
+
+message Reading {
+  string id = 1; // UUID
+  int32 source_id = 2; // optional (0 ako nema)
+  google.protobuf.Timestamp ts = 3;
+
+  double temperature_c = 4;
+  double humidity_percent = 5;
+  double light_lux = 6;
+  double co2_ppm = 7;
+  double humidity_ratio = 8;
+  bool occupancy = 9;
+}
+
+message CreateReadingRequest { Reading reading = 1; }
+message GetReadingRequest { string id = 1; }
+message UpdateReadingRequest { string id = 1; Reading reading = 2; }
+message DeleteReadingRequest { string id = 1; }
+
+message ReadingResponse { Reading reading = 1; }
+
+message DeleteReadingResponse { bool deleted = 1; }
+
+message ListReadingsRequest {
+  google.protobuf.Timestamp from_ts = 1; // optional
+  google.protobuf.Timestamp to_ts = 2;   // optional
+  int32 limit = 3;
+  int32 offset = 4;
+  string order = 5; // "asc" | "desc"
+}
+
+message ListReadingsResponse {
+  repeated Reading readings = 1;
+  int64 total = 2;
+}
+
+enum AggFunc {
+  AGG_FUNC_UNSPECIFIED = 0;
+  MIN = 1;
+  MAX = 2;
+  AVG = 3;
+  SUM = 4;
+}
+
+message AggregateRequest {
+  google.protobuf.Timestamp from_ts = 1;
+  google.protobuf.Timestamp to_ts = 2;
+  repeated string fields = 3; // npr ["temperature_c","co2_ppm"]
+  repeated AggFunc funcs = 4; // npr [MIN,MAX,AVG,SUM]
+}
+
+message AggValue {
+  string field = 1;
+  AggFunc func = 2;
+  double value = 3;
+}
+
+message AggregateResponse {
+  repeated AggValue values = 1;
+}

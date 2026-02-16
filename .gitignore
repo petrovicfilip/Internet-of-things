@@ -1,0 +1,75 @@
+# =========================
+# OS / Editors
+# =========================
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+*.iml
+
+# =========================
+# Git / Logs
+# =========================
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+*.egg-info/
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# =========================
+# Node / NestJS
+# =========================
+node_modules/
+dist/
+build/
+.nest/
+.cache/
+coverage/
+
+# =========================
+# Docker / Compose artifacts
+# =========================
+*.pid
+*.tmp
+
+# =========================
+# Local env files
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Data / Datasets 
+# =========================
+data/raw/
+data/tmp/
+data/**/*.zip
+data/**/*.gz
+data/**/*.7z
+data/**/*.tar
+data/**/*.tar.gz
+
+# =========================
+# Mosquitto persistence 
+# =========================
+mosquitto/data/
+mosquitto/log/
