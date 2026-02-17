@@ -22,6 +22,11 @@ services:
     environment:
       DATABASE_URL: postgresql+asyncpg://filip:filip@postgres:5432/iot1
       GRPC_PORT: "50051"
+      MQTT_ENABLED: "true"
+      MQTT_HOST: mosquitto
+      MQTT_PORT: "1883"
+      MQTT_TOPIC_READINGS: iot/readings
+      MQTT_QOS: "1"
     ports:
       - "50051:50051"
     depends_on:
@@ -54,6 +59,30 @@ services:
     volumes:
       - ./data/processed/occupancy_readings.csv:/data/occupancy_readings.csv:ro
 
+ #############################################
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: iot-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+
+  eventmanager:
+    build: ./eventmanager
+    container_name: iot-eventmanager
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: "1883"
+      MQTT_TOPIC_READINGS: iot/readings
+      MQTT_TOPIC_EVENTS: iot/events
+      TEMP_MAX: "0.0"
+      CO2_MAX: "0"
+      HUM_MIN: "0.0"
+      LIGHT_MAX: "0"
+    depends_on:
+      - mosquitto
 
 volumes:
   pgdata:

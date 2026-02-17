@@ -1,0 +1,50 @@
+asyncapi: 2.6.0
+info:
+  title: DataManager MQTT Publisher API
+  version: 1.0.0
+  description: DataManager publikuje IoT reading poruke nakon upisa u bazu.
+servers:
+  mosquitto:
+    url: mosquitto:1883
+    protocol: mqtt
+channels:
+  iot/readings:
+    publish:
+      message:
+        $ref: '#/components/messages/ReadingPublished'
+components:
+  messages:
+    ReadingPublished:
+      name: ReadingPublished
+      payload:
+        type: object
+        required: [action, emitted_at, reading]
+        properties:
+          action:
+            type: string
+            enum: [created, updated, deleted]
+          emitted_at:
+            type: string
+            format: date-time
+          reading:
+            $ref: '#/components/schemas/Reading'
+  schemas:
+    Reading:
+      type: object
+      required: [id, source_id, ts]
+      properties:
+        id: { type: string, format: uuid }
+        source_id: { type: integer }
+        ts: { type: string, format: date-time }
+        temperature_c: { type: number }
+        humidity_percent: { type: number }
+        light_lux: { type: number }
+        co2_ppm: { type: number }
+        humidity_ratio: { type: number }
+        occupancy: { type: boolean }
+        location:
+          type: object
+          nullable: true
+          properties:
+            lat: { type: number }
+            lon: { type: number }
