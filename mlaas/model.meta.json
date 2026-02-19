@@ -1,0 +1,61 @@
+{
+  "trained_at": "2026-02-18T02:44:53.975933Z",
+  "window_size": 20,
+  "feature_names": [
+    "temp_mean",
+    "temp_std",
+    "hum_mean",
+    "hum_std",
+    "light_mean",
+    "light_std",
+    "co2_mean",
+    "co2_std",
+    "temp_last",
+    "hum_last",
+    "light_last",
+    "co2_last"
+  ],
+  "label": "occupancy (0/1)",
+  "model": "StandardScaler + LogisticRegression(class_weight=balanced)",
+  "metrics": {
+    "val": {
+      "accuracy": 0.9983771502758845,
+      "f1": 0.0,
+      "roc_auc": NaN,
+      "cm": [
+        [
+          3076,
+          5
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    "test": {
+      "accuracy": 0.9938351719662557,
+      "f1": 0.9913988229968311,
+      "roc_auc": 0.9986094432032404,
+      "cm": [
+        [
+          1968,
+          17
+        ],
+        [
+          2,
+          1095
+        ]
+      ]
+    }
+  },
+  "data_file": "G:\\IOT I\\data\\processed\\occupancy_readings.csv",
+  "rows_raw": 20560,
+  "rows_features": 20541,
+  "split_sizes": {
+    "train": 14378,
+    "val": 3081,
+    "test": 3082
+  },
+  "seed": 42
+}

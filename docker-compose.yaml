@@ -15,6 +15,9 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+    networks:
+      - iot-net
+
 
   datamanager:
     build: ./datamanager
@@ -32,6 +35,9 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - iot-net
+
 
   gateway:
     build: ./gateway
@@ -43,6 +49,8 @@ services:
       - "3000:3000"
     depends_on:
       - datamanager
+    networks:
+      - iot-net
 
   sensorgenerator:
     build: ./sensorgenerator
@@ -51,13 +59,15 @@ services:
       GATEWAY_URL: http://gateway:3000/api/v1/readings
       DATA_FILE: /data/occupancy_readings.csv
       MODE: fixed
-      INTERVAL_MS: "200"
+      INTERVAL_MS: "500"
       LIMIT: "5000"
       LOOP: "false"
     depends_on:
       - gateway
     volumes:
       - ./data/processed/occupancy_readings.csv:/data/occupancy_readings.csv:ro
+    networks:
+      - iot-net
 
  #############################################
   mosquitto:
@@ -68,6 +78,8 @@ services:
       - "9001:9001"
     volumes:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    networks:
+      - iot-net
 
   eventmanager:
     build: ./eventmanager
@@ -77,12 +89,63 @@ services:
       MQTT_PORT: "1883"
       MQTT_TOPIC_READINGS: iot/readings
       MQTT_TOPIC_EVENTS: iot/events
-      TEMP_MAX: "0.0"
-      CO2_MAX: "0"
-      HUM_MIN: "0.0"
+      TEMP_MAX: "23.0"
+      CO2_MAX: "1410"
+      HUM_MIN: "35.0"
       LIGHT_MAX: "0"
     depends_on:
       - mosquitto
+    networks:
+      - iot-net
+
+#############################
+  nats:
+    image: nats:2.10
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    networks:
+      - iot-net
+
+
+  mlaas:
+    build: ./mlaas
+    ports:
+      - "8000:8000"
+    networks:
+      - iot-net
+
+
+  analytics:
+    build: ./analytics
+    depends_on: [mosquitto, nats, mlaas]
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: "1883"
+      MQTT_TOPIC_READINGS: "iot/readings"
+      MLAAS_URL: "http://mlaas:8000/predict"
+      NATS_URL: "nats://nats:4222"
+      NATS_SUBJECT: "iot.predictions"
+      WINDOW_SIZE: "20"
+    networks:
+      - iot-net
+
+
+  # mqttnats:
+  #   build: ./mqttnats
+  #   depends_on: [mosquitto, nats]
+  #   environment:
+  #     MQTT_HOST: mosquitto
+  #     MQTT_PORT: "1883"
+  #     MQTT_TOPIC_EVENTS: "iot/events"
+  #     NATS_URL: "nats://nats:4222"
+  #     NATS_SUBJECT: "iot.predictions"
+
+networks:
+  iot-net:
+    name: iot-net
+    external: true
+
 
 volumes:
   pgdata:

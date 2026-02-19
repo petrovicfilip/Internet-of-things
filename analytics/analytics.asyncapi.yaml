@@ -1,0 +1,33 @@
+asyncapi: 2.6.0
+info:
+  title: Analytics NATS Publisher API
+  version: 1.0.0
+  description: Analytics publikuje rezultate ML predikcije na NATS subject iot.predictions.
+servers:
+  nats:
+    url: nats:4222
+    protocol: nats
+channels:
+  iot.predictions:
+    publish:
+      message:
+        $ref: "#/components/messages/PredictionPublished"
+components:
+  messages:
+    PredictionPublished:
+      name: PredictionPublished
+      payload:
+        $ref: "#/components/schemas/Prediction"
+  schemas:
+    Prediction:
+      type: object
+      required: [emitted_at, reading_id, source_id, ts, prediction, probability, model_version, window_size]
+      properties:
+        emitted_at: { type: string, format: date-time }
+        reading_id: { type: string, format: uuid }
+        source_id: { type: integer }
+        ts: { type: string, format: date-time }
+        prediction: { type: integer, enum: [0, 1] }
+        probability: { type: number, minimum: 0, maximum: 1 }
+        model_version: { type: string }
+        window_size: { type: integer }

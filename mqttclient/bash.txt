@@ -4,4 +4,8 @@ pip install -r requirements.txt
 $env:MQTT_HOST="localhost"
 $env:MQTT_PORT="1883"
 $env:MQTT_TOPIC_EVENTS="iot/events"
+
+$env:NATS_URL="nats://localhost:4222"
+$env:NATS_SUBJECT="iot.predictions" 
+
 python .\main.py    
