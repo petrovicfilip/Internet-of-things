@@ -33,7 +33,7 @@ def _patch_logreg(obj):
 
     return obj
 
-
+# ucitam model
 @app.on_event("startup")
 def _startup():
     global model

@@ -127,7 +127,7 @@ def main():
         gateway_url=env("GATEWAY_URL", "http://localhost:3000/api/v1/readings"),
         data_file=env("DATA_FILE", "./data/processed/occupancy_readings.csv"),
         mode=env("MODE", "fixed").lower(),          # fixed | replay
-        interval_ms=int(env("INTERVAL_MS", "200")), # fixed mode: 200ms
+        interval_ms=int(env("INTERVAL_MS", "500")), # fixed mode: 200ms
         speed=float(env("SPEED", "60")),            # replay mode: 60x brže
         limit=int(env("LIMIT", "5000")),               # 0 = bez limita
         loop=env("LOOP", "false").lower() in ("1", "true", "yes", "y"),

@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsISO8601, IsNumber, IsOptional, IsInt, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
+// za dto klase, kakve podatke ocekuje backend i validacija
 export class CreateReadingDto {
   @ApiPropertyOptional({ description: 'Original dataset id (optional)' })
   @IsOptional()

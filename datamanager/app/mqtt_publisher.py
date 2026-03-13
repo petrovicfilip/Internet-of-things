@@ -20,6 +20,7 @@ class MqttPublisher:
         self.qos = int(_env("MQTT_QOS", "1"))
 
         client_id = _env("MQTT_CLIENT_ID", f"datamanager-{int(time.time())}")
+        # pravim klijenta
         self.client = mqtt.Client(client_id=client_id, protocol=mqtt.MQTTv311)
 
         username = _env("MQTT_USERNAME", "")
@@ -44,7 +45,7 @@ class MqttPublisher:
             "emitted_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "reading": reading,        
         }
-        try:
+        try: # saljem podatak na topic readings
             self.client.publish(self.topic, json.dumps(msg), qos=self.qos, retain=False)
         except Exception as e:
             print(f"[datamanager] MQTT publish failed: {e}")

@@ -14,7 +14,7 @@ from .generated import iot_readings_pb2 as pb2
 from .generated import iot_readings_pb2_grpc as pb2_grpc
 from .mqtt_publisher import MqttPublisher
 
-
+# implementira grpc validira zove repository
 def dt_from_ts(ts: Timestamp):
     # Timestamp je message => ima presence (HasField radi)
     return ts.ToDatetime(tzinfo=timezone.utc)

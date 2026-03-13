@@ -11,11 +11,13 @@ def env(name: str, default: str) -> str:
 MQTT_HOST = env("MQTT_HOST", "mosquitto")
 MQTT_PORT = int(env("MQTT_PORT", "1883"))
 
+#pretplata na readings
 TOPIC_IN  = env("MQTT_TOPIC_READINGS", "iot/readings")
+# kad predjem treshold objavin na events
 TOPIC_OUT = env("MQTT_TOPIC_EVENTS", "iot/events")
 QOS = int(env("MQTT_QOS", "1"))
 
-# pragovi (proizvoljni, ali smisleni)
+# pragovi
 TEMP_MAX = float(env("TEMP_MAX", "0.0"))
 CO2_MAX  = float(env("CO2_MAX", "0"))
 HUM_MIN  = float(env("HUM_MIN", "0.0"))

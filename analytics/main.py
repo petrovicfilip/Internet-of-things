@@ -36,6 +36,7 @@ def compute_features(window):
     l = arr("light_lux")
     c = arr("co2_ppm")
 
+    # racunam srednju vresnost za poslednjih 20 i to mi je poruka
     t_mean, t_std = mean_std(t)
     h_mean, h_std = mean_std(h)
     l_mean, l_std = mean_std(l)
@@ -72,6 +73,7 @@ async def main():
         print(f"[analytics] mqtt connected rc={rc}, subscribing {MQTT_TOPIC}")
         client.subscribe(MQTT_TOPIC)
 
+    # ubacuje poruku u asyncio.Queue
     def on_message(client, userdata, msg):
         loop.call_soon_threadsafe(q.put_nowait, msg.payload)
 

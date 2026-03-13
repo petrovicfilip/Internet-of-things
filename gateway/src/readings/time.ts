@@ -1,5 +1,6 @@
 import { Timestamp } from './grpc-types';
 
+// za vreme u timestamp i iz timestamp
 export function toTimestamp(iso: string): Timestamp {
   const ms = Date.parse(iso);
   if (Number.isNaN(ms)) {

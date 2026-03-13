@@ -1,5 +1,5 @@
 export type Timestamp = { seconds: number; nanos?: number };
-
+// kontrakt za komunikaciju klijenta sa grpc  servisom
 export type Reading = {
   id?: string;
   source_id?: number;
@@ -11,6 +11,8 @@ export type Reading = {
   humidity_ratio?: number;
   occupancy?: boolean;
 };
+
+
 
 export type CreateReadingRequest = { reading: Reading };
 export type GetReadingRequest = { id: string };

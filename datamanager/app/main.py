@@ -19,7 +19,7 @@ from .generated import iot_readings_pb2 as pb2
 from .generated import iot_readings_pb2_grpc as pb2_grpc
 from .mqtt_publisher import MqttPublisher
 from .service import ReadingService
-
+# baza init grpc server init registruje readingservice i slusa za zahteve
 
 async def init_db() -> None:
     async with engine.begin() as conn:

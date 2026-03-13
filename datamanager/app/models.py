@@ -9,6 +9,7 @@ from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 
 class Base(DeclarativeBase):
     pass
+# data model readinga u bazi
 
 class SensorReading(Base):
     __tablename__ = "sensor_readings"
@@ -36,6 +37,6 @@ class SensorReading(Base):
         onupdate=func.now(),
         nullable=False,
     )
-
+# da ubrzam upide nad vremenskim podacima
 Index("idx_sensor_readings_ts", SensorReading.ts)
 Index("idx_sensor_readings_ts_occupancy", SensorReading.ts, SensorReading.occupancy)
